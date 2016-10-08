@@ -53,7 +53,7 @@ bool DataMapper::MapProgramToStudioMix(int inIdx, int outIdx)
 	MMRESULT res = ::midiInOpen(&m_softwareInPort, inIdx, reinterpret_cast<DWORD>(DataMapper::MonitorFunction), reinterpret_cast<DWORD>(this), CALLBACK_FUNCTION ) ;
 	if( res != MMSYSERR_NOERROR )
 	{
-		stringstream str ;
+		wstringstream str ;
 		str << "Unable to open Software Input Port." << "Driver open returned: " << res << ends ;
 		AfxMessageBox(str.str().c_str()) ;
 		return false ;
@@ -63,7 +63,7 @@ bool DataMapper::MapProgramToStudioMix(int inIdx, int outIdx)
 	res = ::midiOutOpen(&m_hardwareOutPort, outIdx, 0, 0, CALLBACK_NULL) ;
 	if( res != MMSYSERR_NOERROR )
 	{
-		stringstream str ;
+		wstringstream str ;
 		str << "Unable to open Hardware Output Port." << "Driver open returned: " << res << ends ;
 		AfxMessageBox(str.str().c_str()) ;
 		CloseHardwareTranslationPorts() ;
@@ -77,7 +77,7 @@ bool DataMapper::MapStudioMixToProgram(int inIdx, int outIdx)
 	MMRESULT res = ::midiInOpen(&m_hardwareInPort, inIdx, reinterpret_cast<DWORD>(DataMapper::MonitorFunction), reinterpret_cast<DWORD>(this), CALLBACK_FUNCTION ) ;
 	if( res != MMSYSERR_NOERROR )
 	{
-		stringstream str ;
+		wstringstream str ;
 		str << "Unable to open Hardware Input Port." << "Driver open returned: " << res << ends ;
 		AfxMessageBox(str.str().c_str()) ;
 		return false ;
@@ -87,7 +87,7 @@ bool DataMapper::MapStudioMixToProgram(int inIdx, int outIdx)
 	res = ::midiOutOpen(&m_softwareOutPort, outIdx, 0, 0, CALLBACK_NULL) ;
 	if( res != MMSYSERR_NOERROR )
 	{
-		stringstream str ;
+		wstringstream str ;
 		str << "Unable to open Software Output Port." << "Driver open returned: " << res << ends ;
 		AfxMessageBox(str.str().c_str()) ;
 		CloseHardwareTranslationPorts() ;
@@ -319,9 +319,9 @@ void DataMapper::OnKnob(int knobNumber, Direction whatsHappening)
 	
 	m_knobs[knobNumber].value += ((m_buttons[buttonNumber].engaged ? 1 : 5) * ((whatsHappening==GOING_UP) ? 1 : -1)) ;
 	if(whatsHappening==GOING_UP)
-		m_knobs[knobNumber].value = std::_cpp_min<int>(m_knobs[knobNumber].value, 127) ;
+		m_knobs[knobNumber].value = min(m_knobs[knobNumber].value, 127) ;
 	else
-		m_knobs[knobNumber].value = std::_cpp_max<int>(m_knobs[knobNumber].value, 0) ;
+		m_knobs[knobNumber].value = max(m_knobs[knobNumber].value, 0) ;
 
 	DWORD val = ::midiOutShortMsg(m_softwareOutPort, m_knobs[knobNumber].MakeAMessage()) ;
 	

@@ -9,7 +9,7 @@
 // #define DEVELOPER_TRACE
 #ifdef DEVELOPER_TRACE
 #	include <sstream>
-	using namespace std ;
+	using namespace std;
 #endif
 
 #ifdef _DEBUG
@@ -132,29 +132,29 @@ BOOL CStudioMaxDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
 	// Get all of the MIDI devices...
-	UINT numDev = ::midiInGetNumDevs() ;
+	UINT numDev = ::midiInGetNumDevs();
 	for( UINT idx = 0; idx < numDev; ++idx )
 	{
-		MIDIINCAPS caps ;
-		::midiInGetDevCaps(idx, &caps, sizeof(MIDIINCAPS) ) ;
-		m_selectMIDIHardwareInDevice.AddString(caps.szPname) ;
-		m_selectMIDISoftwareInDevice.AddString(caps.szPname) ;
+		MIDIINCAPS caps;
+		::midiInGetDevCaps(idx, &caps, sizeof(MIDIINCAPS) );
+		m_selectMIDIHardwareInDevice.AddString(caps.szPname);
+		m_selectMIDISoftwareInDevice.AddString(caps.szPname);
 	}
-	numDev = ::midiOutGetNumDevs() ;
-	for( idx = 0; idx < numDev; ++idx )
+	numDev = ::midiOutGetNumDevs();
+	for( UINT idx = 0; idx < numDev; ++idx )
 	{
-		MIDIOUTCAPS caps ;
-		::midiOutGetDevCaps(idx, &caps, sizeof(MIDIOUTCAPS) ) ;
-		m_selectMIDISoftwareOutDevice.AddString(caps.szPname) ;
-		m_selectMIDIHardwareOutDevice.AddString(caps.szPname) ;
+		MIDIOUTCAPS caps;
+		::midiOutGetDevCaps(idx, &caps, sizeof(MIDIOUTCAPS) );
+		m_selectMIDISoftwareOutDevice.AddString(caps.szPname);
+		m_selectMIDIHardwareOutDevice.AddString(caps.szPname);
 	}
 
-	m_selectMIDIHardwareInDevice.SetCurSel(AfxGetApp()->GetProfileInt(_T("Ports"), _T("InFromStudioMix"), -1)) ;
-	m_selectMIDIHardwareOutDevice.SetCurSel(AfxGetApp()->GetProfileInt(_T("Ports"), _T("OutToStudioMix"), -1)) ;
-	m_selectMIDISoftwareInDevice.SetCurSel(::AfxGetApp()->GetProfileInt(_T("Ports"), _T("InFromProgram"), -1)) ;
-	m_selectMIDISoftwareOutDevice.SetCurSel(::AfxGetApp()->GetProfileInt(_T("Ports"), _T("OutToProgram"), -1)) ;
+	m_selectMIDIHardwareInDevice.SetCurSel(AfxGetApp()->GetProfileInt(_T("Ports"), _T("InFromStudioMix"), -1));
+	m_selectMIDIHardwareOutDevice.SetCurSel(AfxGetApp()->GetProfileInt(_T("Ports"), _T("OutToStudioMix"), -1));
+	m_selectMIDISoftwareInDevice.SetCurSel(::AfxGetApp()->GetProfileInt(_T("Ports"), _T("InFromProgram"), -1));
+	m_selectMIDISoftwareOutDevice.SetCurSel(::AfxGetApp()->GetProfileInt(_T("Ports"), _T("OutToProgram"), -1));
 	
-	OnChangeMIDIDevice() ;
+	OnChangeMIDIDevice();
 		
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -210,41 +210,41 @@ HCURSOR CStudioMaxDlg::OnQueryDragIcon()
 
 void CStudioMaxDlg::OnChangeMIDIDevice() 
 {
-	int selHWInIdx = m_selectMIDIHardwareInDevice.GetCurSel() ;
-	int selSWOutIdx = m_selectMIDISoftwareOutDevice.GetCurSel() ;
+	int selHWInIdx = m_selectMIDIHardwareInDevice.GetCurSel();
+	int selSWOutIdx = m_selectMIDISoftwareOutDevice.GetCurSel();
 	if( selHWInIdx >= 0 && selSWOutIdx >= 0  )
 	{
 		if(! m_mapper.MapStudioMixToProgram(selHWInIdx, selSWOutIdx) )
 		{
-			m_selectMIDIHardwareInDevice.SetCurSel(-1) ;
-			m_selectMIDISoftwareOutDevice.SetCurSel(-1) ;
+			m_selectMIDIHardwareInDevice.SetCurSel(-1);
+			m_selectMIDISoftwareOutDevice.SetCurSel(-1);
 		}
 		else
 		{
-			CString tempText ;
-			m_selectMIDIHardwareInDevice.GetWindowText(tempText) ;
-			TRACE("Opened %s for Hardware Input.\n", static_cast<const char*>(tempText) ) ;
-			m_selectMIDISoftwareOutDevice.GetWindowText(tempText) ;
-			TRACE("Opened %s for Software Output.\n", static_cast<const char*>(tempText) ) ;
+			CString tempText;
+			m_selectMIDIHardwareInDevice.GetWindowText(tempText);
+			TRACE("Opened %s for Hardware Input.\n", static_cast<const wchar_t*>(tempText) );
+			m_selectMIDISoftwareOutDevice.GetWindowText(tempText);
+			TRACE("Opened %s for Software Output.\n", static_cast<const wchar_t*>(tempText) );
 		}
 	}
 
-	int selSWInIdx = m_selectMIDISoftwareInDevice.GetCurSel() ;
-	int selHWOutIdx = m_selectMIDIHardwareOutDevice.GetCurSel() ;
+	int selSWInIdx = m_selectMIDISoftwareInDevice.GetCurSel();
+	int selHWOutIdx = m_selectMIDIHardwareOutDevice.GetCurSel();
 	if( selSWInIdx >= 0 && selHWOutIdx >= 0  )
 	{
 		if(! m_mapper.MapProgramToStudioMix(selSWInIdx, selHWOutIdx) )
 		{
-			m_selectMIDISoftwareInDevice.SetCurSel(-1) ;
-			m_selectMIDIHardwareOutDevice.SetCurSel(-1) ;
+			m_selectMIDISoftwareInDevice.SetCurSel(-1);
+			m_selectMIDIHardwareOutDevice.SetCurSel(-1);
 		}
 		else
 		{
-			CString tempText ;
-			m_selectMIDISoftwareInDevice.GetWindowText(tempText) ;
-			TRACE("Opened %s for Software Input.\n", static_cast<const char*>(tempText) ) ;
-			m_selectMIDIHardwareOutDevice.GetWindowText(tempText) ;
-			TRACE("Opened %s for Hardware Output.\n", static_cast<const char*>(tempText) ) ;
+			CString tempText;
+			m_selectMIDISoftwareInDevice.GetWindowText(tempText);
+			TRACE("Opened %s for Software Input.\n", static_cast<const wchar_t*>(tempText) );
+			m_selectMIDIHardwareOutDevice.GetWindowText(tempText);
+			TRACE("Opened %s for Hardware Output.\n", static_cast<const wchar_t*>(tempText) );
 		}
 	}
 	
@@ -253,15 +253,15 @@ void CStudioMaxDlg::OnChangeMIDIDevice()
 
 void CStudioMaxDlg::AppFinished() 
 {
-	::AfxGetApp()->WriteProfileInt(_T("Ports"), _T("InFromStudioMix"), m_selectMIDIHardwareInDevice.GetCurSel() ) ;
-	::AfxGetApp()->WriteProfileInt(_T("Ports"), _T("OutToStudioMix"), m_selectMIDIHardwareOutDevice.GetCurSel() ) ;
+	::AfxGetApp()->WriteProfileInt(_T("Ports"), _T("InFromStudioMix"), m_selectMIDIHardwareInDevice.GetCurSel() );
+	::AfxGetApp()->WriteProfileInt(_T("Ports"), _T("OutToStudioMix"), m_selectMIDIHardwareOutDevice.GetCurSel() );
 
-	::AfxGetApp()->WriteProfileInt(_T("Ports"), _T("InFromProgram"), m_selectMIDISoftwareInDevice.GetCurSel() ) ;
-	::AfxGetApp()->WriteProfileInt(_T("Ports"), _T("OutToProgram"), m_selectMIDISoftwareOutDevice.GetCurSel() ) ;
+	::AfxGetApp()->WriteProfileInt(_T("Ports"), _T("InFromProgram"), m_selectMIDISoftwareInDevice.GetCurSel() );
+	::AfxGetApp()->WriteProfileInt(_T("Ports"), _T("OutToProgram"), m_selectMIDISoftwareOutDevice.GetCurSel() );
 
-	CDialog::OnOK() ;
+	CDialog::OnOK();
 }
 void CStudioMaxDlg::OnCancel()
 {
-	AppFinished() ;
+	AppFinished();
 }
